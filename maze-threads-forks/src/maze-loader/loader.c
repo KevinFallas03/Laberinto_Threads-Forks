@@ -10,6 +10,8 @@
     #include<ctype.h>
 #endif
 
+#define __LOADER__ 
+
 typedef struct maze {
     int width;
     int height;
@@ -147,10 +149,10 @@ void show_maze(Maze maze)
 }
 
 
-int main() {
+// int main() {
 
-    Maze m = load_maze("../../utils/lab2.txt");    
-    show_maze(m);
+//     Maze m = load_maze("../../utils/lab2.txt");    
+//     show_maze(m);
 
 //     return 0;
 // }
