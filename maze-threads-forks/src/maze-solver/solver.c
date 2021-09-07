@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include "../maze-loader/loader.c"
 #include <time.h>
 #include <unistd.h>
+
+#define __SOLVER__ 
+
 
 typedef struct Thread {
    pthread_t id; 
@@ -92,4 +94,16 @@ void create_thread(char direction, int row, int column, int steps){
     // pthread_join( (*t).id, NULL);
 }
 
-
+void print_maze(){
+	for (int row = 0; row < total_rows; row++ ) {
+       for (int column = 0; column < total_columns; column++ ) {
+           if(maze->map[row][column] == '*' || maze->map[row][column] == ' '){
+                printf(maze->map[row][column]);    
+           }else{
+                printf("%s0", maze->map[row][column]);
+            }
+		}
+		printf("\n");
+	}
+	printf("\n");
+}
