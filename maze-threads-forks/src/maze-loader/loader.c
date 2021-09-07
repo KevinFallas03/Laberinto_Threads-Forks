@@ -31,9 +31,9 @@ Maze load_maze(char *filename)
     return maze;
 }
 
-int main() {
+// int main() {
 
-    load_maze("xd.txt");    
+//     load_maze("xd.txt");    
 
-    return 0;
-}
+//     return 0;
+// }

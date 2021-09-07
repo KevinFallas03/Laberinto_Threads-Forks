@@ -1,7 +1,13 @@
-#include<stdio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+#include "maze-solver/solver.c"
+
 
 int main() {
-
-    printf("Hello world!\n");
+    srand(time(NULL));
+    
+    create_thread('s',0,0,0);
     return 0;
 }
+
