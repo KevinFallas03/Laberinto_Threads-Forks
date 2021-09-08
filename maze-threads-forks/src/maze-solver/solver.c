@@ -87,14 +87,14 @@ void *walk(void *thread)
         if (row != 0 && 
             original_maze->map[row-1][column] == FREE_SPACE &&
             current_thread->direction != UP)
-            create_thread(UP, row, column, row-1, column, current_thread->steps);
+            solve_with_threads(UP, row, column, row-1, column, current_thread->steps);
 
         // new walker in LEFT direction
         if (column != 0 &&
             original_maze->map[row][column-1] == FREE_SPACE &&
             current_thread->direction != LEFT)
         {
-            create_thread(LEFT, row, column, row, column-1, current_thread->steps);
+            solve_with_threads(LEFT, row, column, row, column-1, current_thread->steps);
         }
 
         // new walker in DOWN direction
@@ -102,7 +102,7 @@ void *walk(void *thread)
             original_maze->map[row+1][column] == FREE_SPACE &&
             current_thread->direction != DOWN)
         {
-            create_thread(DOWN, row, column, row+1, column, current_thread->steps);
+            solve_with_threads(DOWN, row, column, row+1, column, current_thread->steps);
         }
         
         // new walker in RIGHT direction
@@ -111,7 +111,7 @@ void *walk(void *thread)
             original_maze->map[row][column+1] == FREE_SPACE && 
             current_thread->direction != RIGHT)
         {
-            create_thread(RIGHT, row, column, row, column+1, current_thread->steps);
+            solve_with_threads(RIGHT, row, column, row, column+1, current_thread->steps);
         } 
         
         // check if the thread should die
@@ -127,7 +127,7 @@ void *walk(void *thread)
     }
 }
 
-void create_thread(char direction, int start_row, int start_col, int current_row, int current_col, int steps)
+void solve_with_threads(char direction, int start_row, int start_col, int current_row, int current_column, int steps)
 {    
     pthread_t child_thread;
 
@@ -138,7 +138,7 @@ void create_thread(char direction, int start_row, int start_col, int current_row
     parent_thread.start_row = start_row;
     parent_thread.start_col = start_col;
     parent_thread.current_row = current_row;
-    parent_thread.current_col = current_col;
+    parent_thread.current_col = current_column;
     parent_thread.steps = steps;
     parent_thread.color = rand() % COLORS_AMOUNT;
 

@@ -7,15 +7,15 @@ Maze original_maze = NULL;
 
 #include "maze-solver/solver.c"
 
+void run_solver_with_threads(char *filename);
+
 
 int main() {
     srand(time(NULL));
-    original_maze = load_maze("../utils/lab1.txt");
-    create_thread('s',0,0,0,0,0);
-    return 0;
+    run_solver_with_threads("../utils/lab1.txt");
 }
 
-void manual_test(){
+void manual_test() {
     original_maze->map[0][0] = 1;
     print_maze(original_maze);
     original_maze->map[1][0] = 1;
@@ -34,4 +34,18 @@ void manual_test(){
     print_maze(original_maze);
     original_maze->map[0][4] = 4;
     print_maze(original_maze); 
+}
+
+void run_solver_with_threads(char *filename) 
+{
+    original_maze = load_maze(filename);
+    
+    solve_with_threads(
+        DOWN, // direction (DOWN by default)
+        0,    // initial x position
+        0,    // initial y position
+        0,    // current x position
+        0,    // current y position
+        0     // initial steps amount
+    );
 }

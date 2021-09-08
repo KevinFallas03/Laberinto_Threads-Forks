@@ -64,6 +64,6 @@ const int COL_MOVEMENT[] = {0, -1, 0,  1};
 
 /* FUNCTION HEADERS */
 void *walk( void *thread );
-void create_thread( char, int, int , int, int , int );
+void solve_with_threads(char direction, int start_row, int start_col, int current_row, int current_column, int steps);
 void print_maze();
 int is_at_finish(int row, int column);
