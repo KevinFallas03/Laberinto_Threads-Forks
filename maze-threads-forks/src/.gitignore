@@ -50,4 +50,10 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+#VS Code
 .vscode
+
+# Project executables
+main.exe
+program.exe
