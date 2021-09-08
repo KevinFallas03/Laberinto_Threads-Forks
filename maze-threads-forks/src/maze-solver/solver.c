@@ -93,36 +93,30 @@ void *walk(void *thread)
             printf("Congrats");
         } 
 
-        // new walker in UP direction
-        if (row != 0 && 
-            original_maze->map[row-1][column] == FREE_SPACE &&
-            current_thread->direction != UP)
-            solve_with_threads(UP, row, column, row-1, column, current_thread->steps);
+        int walker_map[][2] = // {<dimension constraint>, <not allowed direction>}
+        {
+            { row != 0,                  UP    },
+            { column != 0,               LEFT  },
+            { row != total_rows-1,       DOWN  },
+            { column != total_columns-1, RIGHT }
+        };
 
-        // new walker in LEFT direction
-        if (column != 0 &&
-            original_maze->map[row][column-1] == FREE_SPACE &&
-            current_thread->direction != LEFT)
+        // for every possible direction
+        for (int i = 0; i < MOVEMENT_AMOUNT; i++)
         {
-            solve_with_threads(LEFT, row, column, row, column-1, current_thread->steps);
-        }
+            // allow US to walk by w,a,s,d (UP, LEFT, DOWN, RIGHT) into the maze
+            int row_shifted = row + ROW_MOVEMENT[i];
+            int col_shifted = column + COL_MOVEMENT[i];
 
-        // new walker in DOWN direction
-        if (row != total_rows-1 &&
-            original_maze->map[row+1][column] == FREE_SPACE &&
-            current_thread->direction != DOWN)
-        {
-            solve_with_threads(DOWN, row, column, row+1, column, current_thread->steps);
+            if (
+                walker_map[i][DIM_CONSTRAINT] && 
+                original_maze->map[row_shifted][col_shifted] == FREE_SPACE &&
+                current_thread->direction != walker_map[i][PROPOSED_DIRECTION]
+            )
+            {
+                solve_with_threads(walker_map[i][PROPOSED_DIRECTION], row, column, row_shifted, col_shifted, current_thread->steps);
+            }
         }
-        
-        // new walker in RIGHT direction
-        if (
-            column != total_columns-1 && 
-            original_maze->map[row][column+1] == FREE_SPACE && 
-            current_thread->direction != RIGHT)
-        {
-            solve_with_threads(RIGHT, row, column, row, column+1, current_thread->steps);
-        } 
         
         // check if the thread should die
         is_death = should_die(current_thread->direction, row, column);

@@ -60,6 +60,9 @@ char* colores[COLORS_AMOUNT]={
 #define DIRECTION 0
 #define LIMIT 1
 
+#define DIM_CONSTRAINT 0
+#define PROPOSED_DIRECTION 1
+
 // movements
 #define MOVEMENT_AMOUNT 4
 const int ROW_MOVEMENT[] = {-1, 0, 1,  0};
