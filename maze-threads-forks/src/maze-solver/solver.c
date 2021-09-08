@@ -27,22 +27,22 @@ void create_thread( char, int, int , int, int , int );
 void print_maze();
 
 int should_die(char direction, int row, int column){
-    int toReturn = 0;
+    int to_return = 0;
     if( direction == 'w' && (row <= 0 || original_maze->map[row-1][column] != ' ') ){
-        toReturn = 1;
+        to_return = 1;
     }
     else if( direction == 'a' && (column <= 0 || original_maze->map[row][column-1] != ' ') ){
-        toReturn = 1;
+        to_return = 1;
     } 
     else if(direction == 's' && 
             ( row >= original_maze->height-1 || original_maze->map[row+1][column] != ' ') ){
-        toReturn = 1;
+        to_return = 1;
     } 
     else if(direction == 'd' && 
             ( column >= original_maze->width-1 || original_maze->map[row][column+1] != ' ') ){
-        toReturn = 1;
+        to_return = 1;
     }
-    return toReturn;
+    return to_return;
 }
 
 void paint_path(int color, int row, int column){
