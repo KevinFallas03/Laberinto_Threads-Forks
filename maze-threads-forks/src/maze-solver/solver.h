@@ -57,6 +57,9 @@ char* colores[COLORS_AMOUNT]={
 #define FINISHED   1
 #define NOT_FINISHED 0
 
+#define DIRECTION 0
+#define LIMIT 1
+
 // movements
 #define MOVEMENT_AMOUNT 4
 const int ROW_MOVEMENT[] = {-1, 0, 1,  0};

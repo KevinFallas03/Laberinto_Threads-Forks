@@ -4,16 +4,26 @@
 
 int should_die(char direction, int row, int column) 
 {
-    int result = SHOULD_ALIVE;
-    
-    // check for surviveness of the current walker
-    result =
-        (direction == UP    && (row <= 0 || original_maze->map[row - 1][column] != FREE_SPACE)) ||
-        (direction == LEFT  && (column <= 0 || original_maze->map[row][column-1] != FREE_SPACE))    || 
-        (direction == DOWN  && (row >= original_maze->height - 1 || original_maze->map[row+1][column] != FREE_SPACE)) ||
-        (direction == RIGHT && (column >= original_maze->width - 1 || original_maze->map[row][column+1] != FREE_SPACE));
+    int die_map[][2] = { // { <direction match>, <dimension constraint> }
+        { direction == UP   , row <= 0                           },
+        { direction == LEFT , column <= 0                        },
+        { direction == DOWN , row >= original_maze->height - 1   },
+        { direction == RIGHT, column >= original_maze->width - 1 }
+    };
 
-    return result;
+    // check for surviveness of the current walker
+    for (int i = 0; i < MOVEMENT_AMOUNT; i++)
+    {
+        if (
+            die_map[i][DIRECTION] && (
+                die_map[i][LIMIT] || 
+                original_maze->map[row + ROW_MOVEMENT[ i ]][column + COL_MOVEMENT[ i ]] != FREE_SPACE
+            )
+        )
+            return SHOULD_DIE;
+    }
+
+    return SHOULD_ALIVE;
 }
 
 void paint_path(int color, int row, int column) 
