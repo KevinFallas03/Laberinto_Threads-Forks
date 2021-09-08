@@ -54,7 +54,7 @@ void take_a_step(Thread *thread)
 
 int is_at_finish(int row, int column)
 {
-    const int at_finish[] = {
+    const int finish_constraint_map[] = {
         in_range(row, 1, original_maze->height   - 1),
         column > 0 && row < original_maze->width - 1 ,
         in_range(row, 1, original_maze->height   - 1),
@@ -64,7 +64,7 @@ int is_at_finish(int row, int column)
     // check if the walker finally reach the goal
     for (int i = 0; i < MOVEMENT_AMOUNT; i++)
     {
-        if (at_finish[i] &&
+        if (finish_constraint_map[i] &&
             original_maze->map[row + ROW_MOVEMENT[i]][column + COL_MOVEMENT[i]] == GOAL
         )
             return FINISHED;
@@ -75,6 +75,7 @@ int is_at_finish(int row, int column)
 
 void *walk(void *thread) 
 {    
+    // void pointer casting for currrent thread
     Thread *current_thread = (Thread *) thread;
 
     int total_rows = original_maze->height;
@@ -90,10 +91,10 @@ void *walk(void *thread)
         paint_path(current_thread->color, row, column);
         
         if(is_at_finish(row, column)){
-            printf("Congrats");
+            handle_winner_thread(current_thread);
         } 
 
-        int walker_map[][2] = // {<dimension constraint>, <not allowed direction>}
+        int walker_map[][2] = // {<dimension constraint>, <propossed direction>}
         {
             { row != 0,                  UP    },
             { column != 0,               LEFT  },
@@ -104,10 +105,11 @@ void *walk(void *thread)
         // for every possible direction
         for (int i = 0; i < MOVEMENT_AMOUNT; i++)
         {
-            // allow US to walk by w,a,s,d (UP, LEFT, DOWN, RIGHT) into the maze
+            // allow us to walk by w,a,s,d (UP, LEFT, DOWN, RIGHT) into the maze
             int row_shifted = row + ROW_MOVEMENT[i];
             int col_shifted = column + COL_MOVEMENT[i];
 
+            // constraint evaluation, free space in the proposed direction, has a not equal direction
             if (
                 walker_map[i][DIM_CONSTRAINT] && 
                 original_maze->map[row_shifted][col_shifted] == FREE_SPACE &&
@@ -153,11 +155,19 @@ void solve_with_threads(char direction, int start_row, int start_col, int curren
     pthread_join(child_thread, NULL);
 }
 
+void handle_winner_thread(Thread *thread) {
+
+    // TODO: show attributes for the thread that already finished the maze
+    printf("Congrats");
+
+}
+
 void print_maze() 
 {
     sleep(UPDATE_RATE_IN_SECONDS);
     clear_console();
 	
+    // for every cell of the maze
     for (int row = 0; row < original_maze->height; row++) 
     {
        for (int column = 0; column < original_maze->width; column++) 

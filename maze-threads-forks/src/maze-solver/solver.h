@@ -72,4 +72,5 @@ const int COL_MOVEMENT[] = {0, -1, 0,  1};
 void *walk( void *thread );
 void solve_with_threads(char direction, int start_row, int start_col, int current_row, int current_column, int steps);
 void print_maze();
-int is_at_finish(int row, int column);
+int  is_at_finish(int row, int column);
+void handle_winner_thread(Thread *thread);
