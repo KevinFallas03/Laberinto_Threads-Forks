@@ -138,15 +138,16 @@ void solve_with_threads(char direction, int start_row, int start_col, int curren
     pthread_t child_thread;
 
     // set the initial properties
-    Thread parent_thread;
-    parent_thread.id = child_thread;
-    parent_thread.direction = direction;
-    parent_thread.start_row = start_row;
-    parent_thread.start_col = start_col;
-    parent_thread.current_row = current_row;
-    parent_thread.current_col = current_column;
-    parent_thread.steps = steps;
-    parent_thread.color = rand() % COLORS_AMOUNT;
+    Thread parent_thread = {
+        .id = child_thread,
+        .direction = direction,
+        .start_row = start_row,
+        .start_col = start_col,
+        .current_row = current_row,
+        .current_col = current_column,
+        .steps = steps,
+        .color = rand() % COLORS_AMOUNT
+    };
 
     // create the parent thread, invoking walk function
     int thread_id = pthread_create( &child_thread, NULL, walk, (void*) &parent_thread);
