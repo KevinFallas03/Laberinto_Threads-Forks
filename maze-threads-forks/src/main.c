@@ -40,7 +40,16 @@ void run_solver_with_threads(char *filename)
 {
     original_maze = load_maze(filename);
     
-    solve_with_threads(
+    // solve_with_threads(
+    //     DOWN, // direction (DOWN by default)
+    //     0,    // initial x position
+    //     0,    // initial y position
+    //     0,    // current x position
+    //     0,    // current y position
+    //     0     // initial steps amount
+    // );
+
+    solve_with_forks(
         DOWN, // direction (DOWN by default)
         0,    // initial x position
         0,    // initial y position

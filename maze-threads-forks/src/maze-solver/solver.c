@@ -73,7 +73,7 @@ int is_at_finish(int row, int column)
     return NOT_FINISHED;
 }
 
-void *walk(void *_walker) 
+void *walk_with_threads(void *_walker) 
 {    
     // void pointer casting for currrent walker
     Walker current_walker = (Walker) _walker;
@@ -134,6 +134,74 @@ void *walk(void *_walker)
     }
 }
 
+void *walk_with_forks(void *_walker) 
+{    
+    // void pointer casting for currrent walker
+    Walker current_walker = (Walker) _walker;
+
+    int total_rows = original_maze->height;
+    int total_columns = original_maze->width;
+
+    int row = current_walker->current_row;
+    int column = current_walker->current_col;
+    
+    int is_death = 0;
+
+    while(!is_death) {
+        
+        paint_path(current_walker->color, row, column);
+        
+        if(is_at_finish(row, column)){
+            handle_winner(current_walker);
+        } 
+
+        int walker_map[][2] = // {<dimension constraint>, <propossed direction>}
+        {
+            { row != 0,                  UP    },
+            { column != 0,               LEFT  },
+            { row != total_rows-1,       DOWN  },
+            { column != total_columns-1, RIGHT }
+        };
+
+        // for every possible direction
+        for (int i = 0; i < MOVEMENT_AMOUNT; i++)
+        {
+            // allow us to walk by w,a,s,d (UP, LEFT, DOWN, RIGHT) into the maze
+            int row_shifted = row + ROW_MOVEMENT[i];
+            int col_shifted = column + COL_MOVEMENT[i];
+
+            // constraint evaluation, free space in the proposed direction, has a not equal direction
+            if (
+                walker_map[i][DIM_CONSTRAINT] && 
+                original_maze->map[row_shifted][col_shifted] == FREE_SPACE &&
+                current_walker->direction != walker_map[i][PROPOSED_DIRECTION]
+            )
+            {
+                // TODO: fork..............
+                solve_with_forks(walker_map[i][PROPOSED_DIRECTION], row, column, row_shifted, col_shifted, current_walker->steps);
+            }
+        }
+        
+        // check if the thread should die
+        is_death = should_die(current_walker->direction, row, column);
+
+        if(!is_death)
+        {
+            // continue walking in the maze
+            take_a_step(current_walker);
+
+            row = current_walker->current_row;
+            column = current_walker->current_col;   
+        }
+        else {     
+                   
+            exit(0); // notify to the parent process
+
+            // TODO: record all maze paths for all walker by child processed
+        }
+    }
+}
+
 void solve_with_threads(char direction, int start_row, int start_col, int current_row, int current_column, int steps)
 {    
     pthread_t child_thread;
@@ -150,10 +218,38 @@ void solve_with_threads(char direction, int start_row, int start_col, int curren
     current_walker->color = rand() % COLORS_AMOUNT;
 
     // create the parent thread, invoking walk function
-    int thread_id = pthread_create( &child_thread, NULL, walk, (void*) current_walker);
+    int thread_id = pthread_create( &child_thread, NULL, walk_with_threads, (void*) current_walker);
     
     // wait until his child thread end
     pthread_join(child_thread, NULL);
+}
+
+void solve_with_forks(char direction, int start_row, int start_col, int current_row, int current_column, int steps)
+{
+    // set the initial properties
+    Walker current_walker = (walker_unit *) malloc(sizeof(walker_unit));
+
+    current_walker->direction = direction;
+    current_walker->start_row = start_row;
+    current_walker->start_col = start_col;
+    current_walker->current_row = current_row;
+    current_walker->current_col = current_column;
+    current_walker->steps = steps;
+    current_walker->color = rand() % COLORS_AMOUNT;
+
+    pid_t pid = fork();
+
+    if (pid == 0) // child
+    {
+        walk_with_forks(current_walker);
+    }
+    else if (pid > 0) // parent
+    {
+        wait(NULL); // wait for child process completion
+    }
+    else {
+        // can't fork
+    }
 }
 
 void handle_winner(Walker walker) {
