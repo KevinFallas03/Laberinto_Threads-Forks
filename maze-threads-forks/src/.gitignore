@@ -57,3 +57,4 @@ dkms.conf
 # Project executables
 main.exe
 program.exe
+program # debug
