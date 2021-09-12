@@ -10,3 +10,7 @@ all:
 
 clean: 
 	rm -f ./program.exe
+
+debug:
+	$(CC) -g -o program main.c $(CFLAGS)
+	gdb program
