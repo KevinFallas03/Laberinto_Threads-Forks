@@ -36,18 +36,18 @@ void paint_path(int color, int row, int column)
     }
 }
 
-void take_a_step(Thread *thread) 
+void take_a_step(Walker current_walker) 
 {
     // add another step
-    thread->steps++;
+    current_walker->steps++;
     
     // using the thread direction, go to the next cell
-    switch (thread->direction)
+    switch (current_walker->direction)
     {
-        case UP   : thread->current_row--; break;
-        case LEFT : thread->current_col--; break;
-        case DOWN : thread->current_row++; break;
-        case RIGHT: thread->current_col++; break;
+        case UP   : current_walker->current_row--; break;
+        case LEFT : current_walker->current_col--; break;
+        case DOWN : current_walker->current_row++; break;
+        case RIGHT: current_walker->current_col++; break;
         default: printf("\nThread direction not allowed\n"); break;
     }
 }
@@ -73,25 +73,25 @@ int is_at_finish(int row, int column)
     return NOT_FINISHED;
 }
 
-void *walk(void *thread) 
+void *walk(void *_walker) 
 {    
-    // void pointer casting for currrent thread
-    Thread *current_thread = (Thread *) thread;
+    // void pointer casting for currrent walker
+    Walker current_walker = (Walker) _walker;
 
     int total_rows = original_maze->height;
     int total_columns = original_maze->width;
 
-    int row = current_thread->current_row;
-    int column = current_thread->current_col;
+    int row = current_walker->current_row;
+    int column = current_walker->current_col;
 
     int is_death = 0;
 
     while(!is_death) {
         
-        paint_path(current_thread->color, row, column);
+        paint_path(current_walker->color, row, column);
         
         if(is_at_finish(row, column)){
-            handle_winner_thread(current_thread);
+            handle_winner(current_walker);
         } 
 
         int walker_map[][2] = // {<dimension constraint>, <propossed direction>}
@@ -113,22 +113,23 @@ void *walk(void *thread)
             if (
                 walker_map[i][DIM_CONSTRAINT] && 
                 original_maze->map[row_shifted][col_shifted] == FREE_SPACE &&
-                current_thread->direction != walker_map[i][PROPOSED_DIRECTION]
+                current_walker->direction != walker_map[i][PROPOSED_DIRECTION]
             )
             {
-                solve_with_threads(walker_map[i][PROPOSED_DIRECTION], row, column, row_shifted, col_shifted, current_thread->steps);
+                solve_with_threads(walker_map[i][PROPOSED_DIRECTION], row, column, row_shifted, col_shifted, current_walker->steps);
             }
         }
         
         // check if the thread should die
-        is_death = should_die(current_thread->direction, row, column);
+        is_death = should_die(current_walker->direction, row, column);
 
         if(!is_death)
         {
             // continue walking in the maze
-            take_a_step(current_thread);
-            row = current_thread->current_row;
-            column = current_thread->current_col;
+            take_a_step(current_walker);
+
+            row = current_walker->current_row;
+            column = current_walker->current_col;
         }
     }
 }
@@ -138,28 +139,29 @@ void solve_with_threads(char direction, int start_row, int start_col, int curren
     pthread_t child_thread;
 
     // set the initial properties
-    Thread parent_thread = {
-        .id = child_thread,
-        .direction = direction,
-        .start_row = start_row,
-        .start_col = start_col,
-        .current_row = current_row,
-        .current_col = current_column,
-        .steps = steps,
-        .color = rand() % COLORS_AMOUNT
-    };
+    Walker current_walker = (walker_unit *) malloc(sizeof(walker_unit));
+
+    current_walker->direction = direction;
+    current_walker->start_row = start_row;
+    current_walker->start_col = start_col;
+    current_walker->current_row = current_row;
+    current_walker->current_col = current_column;
+    current_walker->steps = steps;
+    current_walker->color = rand() % COLORS_AMOUNT;
 
     // create the parent thread, invoking walk function
-    int thread_id = pthread_create( &child_thread, NULL, walk, (void*) &parent_thread);
+    int thread_id = pthread_create( &child_thread, NULL, walk, (void*) current_walker);
     
     // wait until his child thread end
     pthread_join(child_thread, NULL);
 }
 
-void handle_winner_thread(Thread *thread) {
+void handle_winner(Walker walker) {
 
     // TODO: show attributes for the thread that already finished the maze
     printf("Congrats");
+
+
 
 }
 

@@ -4,8 +4,8 @@
 #include <time.h>
 #include <unistd.h>
 
-typedef struct Thread {
-   pthread_t id; 
+
+typedef struct walker_unit {
    char  direction;
    int   start_col;
    int   start_row;
@@ -13,6 +13,13 @@ typedef struct Thread {
    int   current_row;
    int   steps;
    char  color;
+} walker_unit;
+
+typedef struct walker_unit* Walker;
+
+typedef struct Thread {
+   pthread_t id; 
+   Walker walker;
 } Thread;
 
 #define COLORS_AMOUNT 6
@@ -65,6 +72,8 @@ char* colores[COLORS_AMOUNT]={
 
 // movements
 #define MOVEMENT_AMOUNT 4
+
+// w, a, s, d
 const int ROW_MOVEMENT[] = {-1, 0, 1,  0};
 const int COL_MOVEMENT[] = {0, -1, 0,  1};
 
@@ -73,4 +82,4 @@ void *walk( void *thread );
 void solve_with_threads(char direction, int start_row, int start_col, int current_row, int current_column, int steps);
 void print_maze();
 int  is_at_finish(int row, int column);
-void handle_winner_thread(Thread *thread);
+void handle_winner(Walker walker);
