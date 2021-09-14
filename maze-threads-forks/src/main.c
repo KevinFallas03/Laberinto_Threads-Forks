@@ -16,9 +16,9 @@ int main() {
     // set random number seed
     srand(time(NULL));
     
-    const char* filename = "../utils/lab1.txt";
+    char* filename = "../utils/lab1.txt";
 
-    run_solver_with_threads(filename);
+    // run_solver_with_threads(filename);
     run_solver_with_forks(filename);
 }
 
