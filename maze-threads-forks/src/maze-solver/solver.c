@@ -90,7 +90,8 @@ void *walk_with_threads(void *_walker)
         
         paint_path(current_walker->color, row, column);
         
-        if(is_at_finish(row, column)){
+        if(is_at_finish(row, column))
+        {
             handle_winner(current_walker);
         } 
 
@@ -151,7 +152,8 @@ void *walk_with_forks(void *_walker)
         
         paint_path(current_walker->color, row, column);
         
-        if(is_at_finish(row, column)){
+        if(is_at_finish(row, column))
+        {
             handle_winner(current_walker);
         } 
 
@@ -206,16 +208,8 @@ void solve_with_threads(char direction, int start_row, int start_col, int curren
 {    
     pthread_t child_thread;
 
-    // set the initial properties
-    Walker current_walker = (walker_unit *) malloc(sizeof(walker_unit));
-
-    current_walker->direction = direction;
-    current_walker->start_row = start_row;
-    current_walker->start_col = start_col;
-    current_walker->current_row = current_row;
-    current_walker->current_col = current_column;
-    current_walker->steps = steps;
-    current_walker->color = rand() % COLORS_AMOUNT;
+    // create the parent walker
+    Walker current_walker = build_walker(direction, start_row, start_col, current_row, current_column, steps);
 
     // create the parent thread, invoking walk function
     int thread_id = pthread_create( &child_thread, NULL, walk_with_threads, (void*) current_walker);
@@ -226,16 +220,8 @@ void solve_with_threads(char direction, int start_row, int start_col, int curren
 
 void solve_with_forks(char direction, int start_row, int start_col, int current_row, int current_column, int steps)
 {
-    // set the initial properties
-    Walker current_walker = (walker_unit *) malloc(sizeof(walker_unit));
-
-    current_walker->direction = direction;
-    current_walker->start_row = start_row;
-    current_walker->start_col = start_col;
-    current_walker->current_row = current_row;
-    current_walker->current_col = current_column;
-    current_walker->steps = steps;
-    current_walker->color = rand() % COLORS_AMOUNT;
+    // create the parent walker
+    Walker current_walker = build_walker(direction, start_row, start_col, current_row, current_column, steps);
 
     pid_t pid = fork();
 
@@ -252,13 +238,39 @@ void solve_with_forks(char direction, int start_row, int start_col, int current_
     }
 }
 
-void handle_winner(Walker walker) {
+void handle_winner(Walker walker) 
+{    
+    // increase the current winners amount
+    winners++;
 
-    // TODO: show attributes for the thread that already finished the maze
-    printf("Congrats");
+    printf(
+        "#%d - Winner walker: steps->%d, last_direction:%c, x:%d, y:%d\n", 
+        walker->steps, 
+        walker->direction, 
+        walker->current_row, 
+        walker->current_col
+    );
+}
 
+void show_stats() 
+{
+    printf("Winners amount: %d\n", winners);
+}
 
+Walker build_walker(char direction, int start_row, int start_col, int current_row, int current_column, int steps)
+{
+    // set the initial properties
+    Walker current_walker = (walker_unit *) malloc(sizeof(walker_unit));
 
+    current_walker->direction = direction;
+    current_walker->start_row = start_row;
+    current_walker->start_col = start_col;
+    current_walker->current_row = current_row;
+    current_walker->current_col = current_column;
+    current_walker->steps = steps;
+    current_walker->color = rand() % COLORS_AMOUNT;
+
+    return current_walker;
 }
 
 void print_maze() 

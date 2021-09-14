@@ -3,7 +3,8 @@
 #include <pthread.h>
 #include <time.h>
 #include <unistd.h>
-
+#include <sys/types.h>
+#include <sys/wait.h>
 
 typedef struct walker_unit {
    char  direction;
@@ -85,5 +86,8 @@ void solve_with_threads(char direction, int start_row, int start_col, int curren
 void solve_with_forks(char direction, int start_row, int start_col, int current_row, int current_column, int steps);
 
 void print_maze();
+void show_stats();
+
 int  is_at_finish(int row, int column);
 void handle_winner(Walker walker);
+Walker build_walker(char direction, int start_row, int start_col, int current_row, int current_column, int steps);
