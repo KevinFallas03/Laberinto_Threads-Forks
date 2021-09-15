@@ -3,7 +3,7 @@
 #endif
 
 #ifndef __LOADER__
-    #include "loader.h"
+    #include "../maze-loader/loader.c"
 #endif
 
 Walker build_walker(char direction, int start_row, int start_col, int current_row, int current_column, int steps)

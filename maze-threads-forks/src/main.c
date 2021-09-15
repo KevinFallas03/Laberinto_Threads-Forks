@@ -7,9 +7,12 @@ Maze original_maze = NULL;
 int winners = 0;
 
 #include "maze-solver/solver.c"
+#include "utils/file_handler.c"
 
 void run_solver_with_threads(char *filename);
 void run_solver_with_forks(char *filename);
+
+void test_write_file();
 
 int main() {
 
@@ -75,3 +78,15 @@ void manual_test()
     original_maze->map[0][4] = 4;
     print_maze(original_maze); 
 }
+
+// void test_write_file() 
+// {
+//     char *filename = "../xd.txt";
+//     char *content = "Hola mundo desde C";
+
+//     write_file(filename, content);
+
+//     char *file_content = NULL;
+//     file_content = read_file(filename);
+//     printf("%sasdasd\n", file_content);
+// }
