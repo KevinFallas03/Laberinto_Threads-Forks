@@ -196,10 +196,7 @@ void *walk_with_forks(void *_walker)
             column = current_walker->current_col;   
         }
         else {     
-            
-            
-            return NULL;
-            // TODO: record all maze paths for all walker by child processed
+            exit(0); // notify to the parent process
         }
     }
 }
@@ -223,20 +220,14 @@ void solve_with_forks(char direction, int start_row, int start_col, int current_
     // create the parent walker
     Walker current_walker = build_walker(direction, start_row, start_col, current_row, current_column, steps);
 
-    int pipeFDs[2]; /* two file descriptors */
-    if (pipe(pipeFDs) < 0) printf("Error al crear el PIPE");
-    
     pid_t pid = fork();
 
     if (pid == 0) // child
     {
         walk_with_forks(current_walker);
-        //send_maze(original_maze, pipeFDs);
-        exit(0); // notify to the parent process
     }
     else if (pid > 0) // parent
     {   
-        //receive_maze(pipeFDs);
         wait(NULL); // wait for child process completion
     }
     else {

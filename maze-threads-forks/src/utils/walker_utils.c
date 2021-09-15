@@ -40,26 +40,3 @@ Maze copy_maze(Maze original)
           
     return copy;
 }
-
-#define ReadEnd  0
-#define WriteEnd 1
-
-void send_maze(Maze maze, int* pipeFDs){
-    Maze* msg = maze;
-
-    close(pipeFDs[ReadEnd]);                          /* parent writes, doesn't read */
-
-    write(pipeFDs[WriteEnd], msg, sizeof(msg));       /* write the bytes to the pipe */
-    close(pipeFDs[WriteEnd]);                         /* done writing: generate eof */
-}
-void receive_maze(int* pipeFDs){
-    Maze* buf;
-    close(pipeFDs[WriteEnd]);                         /* child reads, doesn't write */
-
-    while (read(pipeFDs[ReadEnd], &buf, sizeof(buf)) > 0)       /* read until end of byte stream */
-      write(STDOUT_FILENO, &buf, sizeof(buf));        /* echo to the standard output */
-
-    close(pipeFDs[ReadEnd]);
-
-}
-
