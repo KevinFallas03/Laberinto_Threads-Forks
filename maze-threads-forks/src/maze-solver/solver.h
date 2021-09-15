@@ -6,8 +6,6 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#define __WALKER_DEFINITION__
-
 typedef struct walker_unit {
    char  direction;
    int   start_col;
