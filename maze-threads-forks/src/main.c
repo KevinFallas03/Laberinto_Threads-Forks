@@ -19,7 +19,7 @@ int main() {
     // set random number seed
     srand(time(NULL));
     
-    char* filename = "../utils/lab1.txt";
+    char* filename = "../files/lab1.txt";
 
     run_solver_with_threads(filename);
     run_solver_with_forks(filename);
