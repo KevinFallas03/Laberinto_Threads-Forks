@@ -1,10 +1,4 @@
-#ifndef __WALKER_DEFINITION__
-    #include "solver.h"
-#endif
-
-#ifndef __LOADER__
-    #include "../maze-loader/loader.c"
-#endif
+#include "walker_utils.h"
 
 Walker build_walker(char direction, int start_row, int start_col, int current_row, int current_column, int steps)
 {

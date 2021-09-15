@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include "maze-loader/loader.c"
+#include "loader/loader.c"
 
 Maze original_maze = NULL;
 int winners = 0;
 
-#include "maze-solver/solver.c"
+#include "solver/solver.c"
 #include "utils/file_handler.c"
 
 void run_solver_with_threads(char *filename);
