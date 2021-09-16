@@ -4,57 +4,28 @@
 #include "loader/loader.c"
 
 Maze original_maze = NULL;
-int winners = 0;
 
 #include "solver/solver.c"
+#include "timer/timer.c"
 #include "utils/file_handler.c"
 
-void run_solver_with_threads(char *filename);
-void run_solver_with_forks(char *filename);
-
+void run_threads_and_fork_solvers(char *filename);
 void test_write_file();
 
-int main() {
+int main(int argc, char const *argv[])
+{
+    char *filename = "../files/lab1.txt";
+    run_threads_and_fork_solvers(filename);
+    return EXIT_SUCCESS;
+}
 
-    // set random number seed
+
+void run_threads_and_fork_solvers(char *filename) {
+
     srand(time(NULL));
-    
-    char* filename = "../files/lab1.txt";
 
-    run_solver_with_threads(filename);
-    run_solver_with_forks(filename);
-}
-
-void run_solver_with_threads(char *filename) 
-{
-    original_maze = load_maze(filename);
-
-    solve_with_threads(
-        DOWN, // direction (DOWN by default)
-        0,    // initial x position
-        0,    // initial y position
-        0,    // current x position
-        0,    // current y position
-        0     // initial steps amount
-    );
-    
-    show_stats();
-}
-
-void run_solver_with_forks(char *filename)
-{
-    original_maze = load_maze(filename);
-
-    solve_with_forks(
-        DOWN, // direction (DOWN by default)
-        0,    // initial x position
-        0,    // initial y position
-        0,    // current x position
-        0,    // current y position
-        0     // initial steps amount
-    );
-
-    show_stats();
+    eval_solver(solve_with_threads, "THREADS", filename);
+    eval_solver(solve_with_forks, "FORKS", filename);
 }
 
 void manual_test() 

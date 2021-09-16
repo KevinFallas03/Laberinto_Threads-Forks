@@ -229,6 +229,7 @@ void solve_with_forks(char direction, int start_row, int start_col, int current_
     else if (pid > 0) // parent
     {   
         wait(NULL); // wait for child process completion
+        return;
     }
     else {
         // can't fork
@@ -237,9 +238,6 @@ void solve_with_forks(char direction, int start_row, int start_col, int current_
 
 void handle_winner(Walker walker) 
 {    
-    // increase the current winners amount
-    winners++;
-
     printf(
         "Winner walker: steps->%d, last_direction:%c, x:%d, y:%d\n", 
         walker->steps, 
@@ -251,7 +249,7 @@ void handle_winner(Walker walker)
 
 void show_stats() 
 {
-    printf("Winners amount: %d\n", winners);
+   
 }
 
 Walker build_walker(char direction, int start_row, int start_col, int current_row, int current_column, int steps)

@@ -17,3 +17,11 @@ char *maze_to_str(Maze maze)
 
     return str;
 }
+
+void free_maze(Maze maze) 
+{
+  for (int i=0; i<maze->height; i++)
+    free(maze->map[i]);
+
+  free(maze);
+}

@@ -18,11 +18,6 @@ typedef struct walker_unit {
 
 typedef struct walker_unit* Walker;
 
-typedef struct Thread {
-   pthread_t id; 
-   Walker walker;
-} Thread;
-
 #define COLORS_AMOUNT 6
 #define RESET "\x1B[0m"
 
