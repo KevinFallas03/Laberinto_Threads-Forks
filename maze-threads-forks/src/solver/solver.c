@@ -184,7 +184,7 @@ void *walk_with_forks(void *_walker)
             }
         }
         
-        // check if the thread should die
+        // check if the forkS should die
         is_death = should_die(current_walker->direction, row, column);
 
         if(!is_death)
@@ -233,6 +233,8 @@ void solve_with_forks(char direction, int start_row, int start_col, int current_
     }
     else {
         // can't fork
+        printf("An error ocurred trying to create the fork.");
+        exit(0);
     }
 }
 
