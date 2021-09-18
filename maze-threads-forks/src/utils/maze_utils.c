@@ -2,15 +2,23 @@
 
 void maze_to_str(Maze maze, char* str) 
 {
-    // allocate memory for the maze string representation
-    //str = (char *) malloc(maze->height * maze->width + maze->height + 1);
-
-    for (int x = 0; x < maze->width; x++)
+    int offset = 1;
+    str[0] = '\n';
+    for (int x = 0; x < maze->height; x++)
     {
-      for (int y = 0; y < maze->height; y++)
-        str[x * maze->width + y] = maze->map[ y ][ x ]; 
+      for (int y = 0; y < maze->width; y++) {
+        str[x * maze->width + y + offset] = 
+          maze->map[ x ][ y ] < 10 
+            ? maze->map[ x ][ y ] + '0' 
+            : maze->map[ x ][ y ] ; 
+      }
     
-      str[x * maze->width + maze->height]= x == (maze->width-1) ? '\n' : '\0';
+      str[x * maze->width + maze->height + offset] = 
+        x < (maze->width-1) 
+          ? '\n' 
+          : '\0';
+      
+      offset++;
     }
 
 }
@@ -20,5 +28,6 @@ void free_maze(Maze maze)
   for (int i=0; i<maze->height; i++)
     free(maze->map[i]);
 
+  free(maze->map);
   free(maze);
 }
