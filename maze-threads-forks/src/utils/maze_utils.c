@@ -1,11 +1,9 @@
 #include "maze_utils.h"
 
-char *maze_to_str(Maze maze) 
+void maze_to_str(Maze maze, char* str) 
 {
-    char *str;
-
     // allocate memory for the maze string representation
-    str = (char *) malloc(maze->height * maze->width + maze->height + 1);
+    //str = (char *) malloc(maze->height * maze->width + maze->height + 1);
 
     for (int x = 0; x < maze->width; x++)
     {
@@ -15,7 +13,6 @@ char *maze_to_str(Maze maze)
       str[x * maze->width + maze->height]= x == (maze->width-1) ? '\n' : '\0';
     }
 
-    return str;
 }
 
 void free_maze(Maze maze) 

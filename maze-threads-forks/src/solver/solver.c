@@ -1,4 +1,7 @@
 #include "solver.h"
+#include "../utils/file_handler.h"
+#include "../utils/maze_utils.c"
+
 
 #define __SOLVER__ 
 
@@ -92,7 +95,7 @@ void *walk_with_threads(void *_walker)
         
         if(is_at_finish(row, column))
         {
-            handle_winner(current_walker);
+            handle_winner(current_walker, original_maze);
         } 
 
         int walker_map[][2] = // {<dimension constraint>, <propossed direction>}
@@ -154,7 +157,7 @@ void *walk_with_forks(void *_walker)
         
         if(is_at_finish(row, column))
         {
-            handle_winner(current_walker);
+            handle_winner(current_walker, original_maze);  
         } 
 
         int walker_map[][2] = // {<dimension constraint>, <propossed direction>}
@@ -195,7 +198,7 @@ void *walk_with_forks(void *_walker)
             row = current_walker->current_row;
             column = current_walker->current_col;   
         }
-        else {     
+        else {  
             exit(0); // notify to the parent process
         }
     }
@@ -223,7 +226,7 @@ void solve_with_forks(char direction, int start_row, int start_col, int current_
     pid_t pid = fork();
 
     if (pid == 0) // child
-    {
+    {   
         walk_with_forks(current_walker);
     }
     else if (pid > 0) // parent
@@ -238,8 +241,9 @@ void solve_with_forks(char direction, int start_row, int start_col, int current_
     }
 }
 
-void handle_winner(Walker walker) 
+void handle_winner(Walker walker, Maze maze) 
 {    
+    save_info(walker, maze); 
     printf(
         "Winner walker: steps->%d, last_direction:%c, x:%d, y:%d\n", 
         walker->steps, 
@@ -249,9 +253,64 @@ void handle_winner(Walker walker)
     );
 }
 
-void show_stats() 
-{
-   
+void save_info(Walker walker, Maze maze){
+    char fileStatsName[50] = "../files/solutions/";
+    char fileMapName[50] = "../files/solutions/";
+    char result[500] = "";
+    char stats[100] = "";
+    char map[300] = "";
+    char buffer[20];
+
+    char id[20] = "";
+    get_last_file(id);
+
+    strcat(result, "Id: ");
+    //sprintf(buffer, "%d", tm_struct->);
+    strcat(result, id);
+    strncat(result, "\n", 2);
+
+    strcat(fileStatsName, id);
+    strcat(fileStatsName, "_stats.txt");
+    get_stats(walker, stats);
+    strcat(result, stats);
+    strncat(result, "\n", 2);
+
+    write_file(fileStatsName, result);
+
+    strcat(fileMapName, id);
+    strcat(fileMapName, "_map.txt");
+    maze_to_str(maze, map);
+    write_file(fileMapName, map);
+}
+
+void get_stats(Walker walker, char* result){
+    char buffer[20];
+
+    strcat(result, "Steps: ");
+    sprintf(buffer, "%d", walker->steps);
+    strcat(result, buffer);
+    strncat(result, "\n", 2);
+    
+    strcat(result, "Initial position; X:");
+    sprintf(buffer, "%d", walker->start_row);
+    strcat(result, buffer);
+
+    strcat(result, ", Y:");
+
+    sprintf(buffer, "%d", walker->start_col);
+    strcat(result, buffer);
+    strncat(result, "\n", 2);
+    
+    strcat(result, "Final position; X:");
+    sprintf(buffer, "%d", walker->current_row);
+    strcat(result, buffer);
+
+    strcat(result, ", Y:");
+
+    sprintf(buffer, "%d", walker->current_col);
+    strcat(result, buffer);
+
+    return &result;
 }
 
 Walker build_walker(char direction, int start_row, int start_col, int current_row, int current_column, int steps)

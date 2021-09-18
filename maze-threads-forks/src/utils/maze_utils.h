@@ -1,3 +1,3 @@
 #define __MAZE_UTILS__ 
 
-char *maze_to_str(Maze maze);
+void maze_to_str(Maze maze, char* str);

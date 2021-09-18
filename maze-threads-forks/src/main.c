@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <dirent.h> 
 #include <stdlib.h>
 #include <pthread.h>
 #include "loader/loader.c"
@@ -16,16 +17,20 @@ int main(int argc, char const *argv[])
 {
     char *filename = "../files/lab1.txt";
     run_threads_and_fork_solvers(filename);
+
     return EXIT_SUCCESS;
 }
 
 
 void run_threads_and_fork_solvers(char *filename) {
-
+    
+    clean_directory();
     srand(time(NULL));
 
     eval_solver(solve_with_threads, "THREADS", filename);
     eval_solver(solve_with_forks, "FORKS", filename);
+
+    show_results();
 }
 
 void manual_test() 
@@ -61,3 +66,4 @@ void manual_test()
 //     file_content = read_file(filename);
 //     printf("%sasdasd\n", file_content);
 // }
+

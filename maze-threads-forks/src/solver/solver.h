@@ -84,5 +84,5 @@ void print_maze();
 void show_stats();
 
 int  is_at_finish(int row, int column);
-void handle_winner(Walker walker);
+void handle_winner(Walker walker, Maze maze);
 Walker build_walker(char direction, int start_row, int start_col, int current_row, int current_column, int steps);
