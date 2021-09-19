@@ -1,7 +1,6 @@
 #include "solver.h"
-#include "../utils/file_handler.h"
 #include "../utils/maze_utils.c"
-
+#include "../utils/file_handler.c"
 
 #define __SOLVER__ 
 
@@ -203,7 +202,6 @@ void *walk_with_forks(void *_walker)
                     NO_WAIT
                 );           
             }
-            
         }
         
         // check if the forkS should die
@@ -275,72 +273,8 @@ pid_t solve_with_forks(char direction, int start_row, int start_col, int current
 void handle_winner(Walker walker, Maze maze) 
 {    
     save_info(walker, maze); 
-    // printf(
-    //     "Winner walker: steps->%d, last_direction:%c, x:%d, y:%d\n", 
-    //     walker->steps, 
-    //     walker->direction, 
-    //     walker->current_row, 
-    //     walker->current_col
-    // );
 }
 
-void save_info(Walker walker, Maze maze){
-    char fileStatsName[50] = "../files/solutions/";
-    char fileMapName[50] = "../files/solutions/";
-    char result[500] = "";
-    char stats[100] = "";
-    char map[300] = "";
-    char buffer[20];
-
-    char id[20] = "";
-    get_last_file(id);
-
-    strcat(result, "Id: ");
-    //sprintf(buffer, "%d", tm_struct->);
-    strcat(result, id);
-    strncat(result, "\n", 2);
-
-    strcat(fileStatsName, id);
-    strcat(fileStatsName, "_stats.txt");
-    get_stats(walker, stats);
-    strcat(result, stats);
-    strncat(result, "\n", 2);
-
-    write_file(fileStatsName, result);
-
-    strcat(fileMapName, id);
-    strcat(fileMapName, "_map.txt");
-    maze_to_str(maze, map);
-    write_file(fileMapName, map);
-}
-
-void get_stats(Walker walker, char* result){
-    char buffer[20];
-
-    strcat(result, "Steps: ");
-    sprintf(buffer, "%d", walker->steps);
-    strcat(result, buffer);
-    strncat(result, "\n", 2);
-    
-    strcat(result, "Initial position; X:");
-    sprintf(buffer, "%d", walker->start_row);
-    strcat(result, buffer);
-
-    strcat(result, ", Y:");
-
-    sprintf(buffer, "%d", walker->start_col);
-    strcat(result, buffer);
-    strncat(result, "\n", 2);
-    
-    strcat(result, "Final position; X:");
-    sprintf(buffer, "%d", walker->current_row);
-    strcat(result, buffer);
-
-    strcat(result, ", Y:");
-
-    sprintf(buffer, "%d", walker->current_col);
-    strcat(result, buffer);
-}
 
 Walker build_walker(char direction, int start_row, int start_col, int current_row, int current_column, int steps)
 {

@@ -18,3 +18,6 @@ void clean_directory();
 void show_results();
 void print_file_content(char *filename);
 void get_last_file(char *filename);
+
+void save_info(Walker walker, Maze maze);
+void get_stats(Walker walker, char* result);

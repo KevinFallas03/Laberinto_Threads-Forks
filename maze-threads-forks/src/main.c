@@ -8,11 +8,8 @@
 
 Maze original_maze = NULL;
 
-
 #include "solver/solver.c"
 #include "timer/timer.c"
-#include "utils/file_handler.c"
-
 
 void run_threads_and_fork_solvers(char *filename);
 void test_write_file();

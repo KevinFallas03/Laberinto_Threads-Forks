@@ -3,6 +3,8 @@
     #include <stdlib.h>
 #endif
 
+#define __MEMO__
+
 typedef struct maze {
     int width;
     int height;
