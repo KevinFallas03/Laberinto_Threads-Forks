@@ -1,9 +1,9 @@
 #include "loader.h"
 
-int get_dimensions(Maze maze, char* filename) 
+int get_dimensions(Dimension dim, char* filename) 
 {
     FILE *file = fopen(filename, "r");
-    if (!file) {return 0;}
+    if (!file) { return 0; }
 
     // check for dimension in the first row of the file
     int c, dimension_appeared = 0;
@@ -14,7 +14,7 @@ int get_dimensions(Maze maze, char* filename)
     fclose(file);
     file = fopen(filename, "r");
 
-    maze->width = maze->height = 0;
+    dim->width = dim->height = 0;
 
     if (dimension_appeared) 
     {
@@ -24,7 +24,7 @@ int get_dimensions(Maze maze, char* filename)
         // get the width dimension
         while ((c = getc(file)) != ' ')
             if (isdigit(c) && !stop_detection)
-                maze->width = maze->width * 10 + (c - '0');
+                dim->width = dim->width * 10 + (c - '0');
             else
                 stop_detection = 1;
 
@@ -33,7 +33,7 @@ int get_dimensions(Maze maze, char* filename)
         // get the height dimension
         while ((c = getc(file)) != ROW_FINISH_MARK)
             if (isdigit(c) && !stop_detection)
-                maze->height = maze->height * 10 + (c - '0');
+                dim->height = dim->height * 10 + (c - '0');
             else
                 stop_detection = 1;
 
@@ -44,20 +44,20 @@ int get_dimensions(Maze maze, char* filename)
     else
     {
         // using the full maze to get their dimensions
-        maze->width = maze->height = 0;
+        dim->width = dim->height = 0;
      
         while ((c = getc(file)) != ROW_FINISH_MARK)
-            maze->width++;
+            dim->width++;
 
-        maze->width -= 1;
-        maze->height = 1;
+        dim->width -= 1;
+        dim->height = 1;
 
         while ((c = getc(file)) != EOF)
         {
-            maze->height = c == ROW_FINISH_MARK ? maze->height + 1 : maze->height;
+            dim->height = c == ROW_FINISH_MARK ? dim->height + 1 : dim->height;
         }
 
-        maze->height++;
+        dim->height++;
 
         fclose(file);
 
@@ -65,16 +65,12 @@ int get_dimensions(Maze maze, char* filename)
     }
 }
 
-Maze load_maze(char *filename)
-{
-    Maze maze = NULL;
-    maze = (Maze) malloc(sizeof(struct maze));
-    int is_dimensioned = get_dimensions(maze, filename);
+Maze load_maze(char *filename, int strategy_mode)
+{    
+    Dimension dim = (Dimension) malloc(sizeof(Dimension));
+    int is_dimensioned = get_dimensions(dim, filename);
 
-    // allocate enough memory for the maze map
-    maze->map = (char**) malloc(sizeof(char*) * maze->height);
-    for (int i=0; i<maze->height; i++)
-        maze->map[i] = (char*) malloc(sizeof(char) * maze->width);
+    Maze maze = strategy_mode == THREADS_MODE ? create_maze(dim) : create_shared_maze(dim);
 
     FILE *file = fopen(filename, "r");
     if (file) {
@@ -91,6 +87,7 @@ Maze load_maze(char *filename)
             }
             else
             {
+                printf("\n\n[Y:%d, X:%d, P:%p]\n\n", y, x, maze->map[y]);
                 maze->map[y][x] = c;
                 x++;
             }

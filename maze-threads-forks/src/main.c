@@ -2,13 +2,17 @@
 #include <dirent.h> 
 #include <stdlib.h>
 #include <pthread.h>
+
+#include "memo/memo.c"
 #include "loader/loader.c"
 
 Maze original_maze = NULL;
 
+
 #include "solver/solver.c"
 #include "timer/timer.c"
 #include "utils/file_handler.c"
+
 
 void run_threads_and_fork_solvers(char *filename);
 void test_write_file();
@@ -21,16 +25,15 @@ int main(int argc, char const *argv[])
     return EXIT_SUCCESS;
 }
 
-
 void run_threads_and_fork_solvers(char *filename) {
     
     clean_directory();
     srand(time(NULL));
 
-    eval_solver(solve_with_threads, "THREADS", filename);
-    // eval_solver(solve_with_forks, "FORKS", filename);
+    eval_solver(solve_with_threads, "THREADS", filename, THREADS_MODE);
+    //eval_solver(solve_with_forks, "FORKS", filename, FORKS_MODE);
 
-    // show_results();
+    //show_results();
 }
 
 void manual_test() 

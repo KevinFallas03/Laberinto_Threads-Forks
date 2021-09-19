@@ -7,5 +7,6 @@
 void eval_solver(
     void (*solve)(char,int,int,int,int,int), 
     char *strategy_name, 
-    char *filename);
+    char *filename, 
+    int strategy_mode);
 

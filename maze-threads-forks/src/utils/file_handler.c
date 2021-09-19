@@ -22,7 +22,7 @@ char* read_file(char *filename){
     {
       str[i] = c;
       i++;
-      realloc(str, i*sizeof(char));
+      str = realloc(str, i*sizeof(char));
     }
     
     str[i] = '\0';
@@ -95,7 +95,7 @@ void print_file_content(char *filename){
 }
 
 void get_last_file(char *filename){
-    const char path[50] = "../files/solutions/count.txt";
+    char path[50] = "../files/solutions/count.txt";
 	FILE *fptr;
     fptr = fopen(path, "r");
     if (fptr == NULL)

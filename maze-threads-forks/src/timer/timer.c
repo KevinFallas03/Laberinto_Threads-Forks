@@ -4,11 +4,13 @@ void eval_solver
 (
     void (*solve)(char,int,int,int,int,int), 
     char *strategy_name,
-    char *filename
+    char *filename,
+    int strategy_mode
 )
 {
+    
     // load maze from file
-    original_maze = load_maze(filename);
+    original_maze = load_maze(filename, strategy_mode);
 
     // set start time
     clock_t begin = clock();

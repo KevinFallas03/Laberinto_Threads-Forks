@@ -14,3 +14,7 @@
 
 char* read_file(char *filename);
 void write_file(char *filename, char *content);
+void clean_directory();
+void show_results();
+void print_file_content(char *filename);
+void get_last_file(char *filename);

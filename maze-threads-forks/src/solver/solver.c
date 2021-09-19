@@ -235,10 +235,15 @@ pthread_t solve_with_threads_aux(char direction, int start_row, int start_col, i
     return child_thread;
 }
 
+void hello() {
+    printf("HELLO");
+}
+
 void solve_with_forks(char direction, int start_row, int start_col, int current_row, int current_column, int steps)
 {
     // create the parent walker
-    Walker current_walker = build_walker(direction, start_row, start_col, current_row, current_column, steps);
+    Walker current_walker = 
+        build_walker(direction, start_row, start_col, current_row, current_column, steps);
 
     pid_t pid = fork();
 
@@ -248,13 +253,13 @@ void solve_with_forks(char direction, int start_row, int start_col, int current_
     }
     else if (pid > 0) // parent
     {   
+        printf("WAITING\n");
         wait(NULL); // wait for child process completion
-        return;
     }
-    else {
+    else if (pid == -1) {
         // can't fork
         printf("An error ocurred trying to create the fork.");
-        exit(0);
+        exit(-1);
     }
 }
 
@@ -326,8 +331,6 @@ void get_stats(Walker walker, char* result){
 
     sprintf(buffer, "%d", walker->current_col);
     strcat(result, buffer);
-
-    return &result;
 }
 
 Walker build_walker(char direction, int start_row, int start_col, int current_row, int current_column, int steps)
