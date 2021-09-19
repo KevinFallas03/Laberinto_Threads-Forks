@@ -71,6 +71,8 @@ Maze load_maze(char *filename, int strategy_mode)
     int is_dimensioned = get_dimensions(dim, filename);
 
     Maze maze = strategy_mode == THREADS_MODE ? create_maze(dim) : create_shared_maze(dim);
+    maze->height = dim->height;
+    maze->width = dim->width;
 
     FILE *file = fopen(filename, "r");
     if (file) {
@@ -87,7 +89,6 @@ Maze load_maze(char *filename, int strategy_mode)
             }
             else
             {
-                printf("\n\n[Y:%d, X:%d, P:%p]\n\n", y, x, maze->map[y]);
                 maze->map[y][x] = c;
                 x++;
             }

@@ -16,15 +16,15 @@ Maze create_shared_maze(Dimension dim)
 
     maze->map = (char**) mmap( 
             NULL,
-            sizeof(char*) * maze->height,
+            sizeof(char*) * dim->height,
             PROT_READ  | PROT_WRITE,
             MAP_SHARED | MAP_ANONYMOUS,
             0, 
             0
         );
 
-    for (int i=0; i<maze->height; i++)
-        maze->map[i] = (char*) malloc(sizeof(char) * maze->width);
+    for (int i=0; i< dim->height; i++)
+        maze->map[i] = (char*) malloc(sizeof(char) * dim->width);
 
     return maze;
 }
@@ -34,9 +34,9 @@ Maze create_maze(Dimension dim)
     Maze maze = (Maze) malloc(sizeof(struct maze));
     
     // allocate enough memory for the maze map
-    maze->map = (char**) malloc(sizeof(char*) * maze->height);
-    for (int i=0; i<maze->height; i++)
-        maze->map[i] = (char*) malloc(sizeof(char) * maze->width);
+    maze->map = (char**) malloc(sizeof(char*) * dim->height);
+    for (int i=0; i<dim->height; i++)
+        maze->map[i] = (char*) malloc(sizeof(char) * dim->width);
 
     return maze;
 }
