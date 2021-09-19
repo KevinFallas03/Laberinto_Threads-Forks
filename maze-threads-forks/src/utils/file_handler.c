@@ -94,7 +94,8 @@ void print_file_content(char *filename){
   	fclose(fptr);
 }
 
-void get_last_file(char *filename){
+void get_last_file(char *filename)
+{
     char path[50] = "../files/solutions/count.txt";
 	FILE *fptr;
     fptr = fopen(path, "r");

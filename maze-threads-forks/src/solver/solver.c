@@ -266,13 +266,13 @@ void solve_with_forks(char direction, int start_row, int start_col, int current_
 void handle_winner(Walker walker, Maze maze) 
 {    
     save_info(walker, maze); 
-    printf(
-        "Winner walker: steps->%d, last_direction:%c, x:%d, y:%d\n", 
-        walker->steps, 
-        walker->direction, 
-        walker->current_row, 
-        walker->current_col
-    );
+    // printf(
+    //     "Winner walker: steps->%d, last_direction:%c, x:%d, y:%d\n", 
+    //     walker->steps, 
+    //     walker->direction, 
+    //     walker->current_row, 
+    //     walker->current_col
+    // );
 }
 
 void save_info(Walker walker, Maze maze){
