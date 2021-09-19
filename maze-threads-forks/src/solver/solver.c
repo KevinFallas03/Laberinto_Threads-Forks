@@ -117,8 +117,16 @@ void *walk_with_threads(void *_walker)
                 current_walker->direction != walker_map[i][PROPOSED_DIRECTION]
             )
             {
-                pthread_t tid = solve_with_threads_aux(walker_map[i][PROPOSED_DIRECTION], row, column, row_shifted, col_shifted, current_walker->steps);
-                pid_list[pid_counter++] = tid;
+                pthread_t tid = 
+                    solve_with_threads(
+                        walker_map[i][PROPOSED_DIRECTION], 
+                        row, column, 
+                        row_shifted, col_shifted, 
+                        current_walker->steps,
+                        NO_WAIT
+                    );
+
+                pid_list[ pid_counter++ ] = tid;
             }
         }
         
@@ -187,12 +195,13 @@ void *walk_with_forks(void *_walker)
                 current_walker->direction != walker_map[i][PROPOSED_DIRECTION]
             )
             {
-                // TODO: fork..............
-                solve_with_forks_aux(walker_map[i][PROPOSED_DIRECTION], row, column, row_shifted, col_shifted, current_walker->steps);
-
-                // pthread_t tid = solve_with_threads_aux(walker_map[i][PROPOSED_DIRECTION], row, column, row_shifted, col_shifted, current_walker->steps);
-                // pid_register[pid_counter++] = tid;
-           
+                solve_with_forks(
+                    walker_map[i][PROPOSED_DIRECTION], 
+                    row, column, 
+                    row_shifted, col_shifted, 
+                    current_walker->steps,
+                    NO_WAIT
+                );           
             }
             
         }
@@ -215,7 +224,7 @@ void *walk_with_forks(void *_walker)
     }
 }
 
-void solve_with_threads(char direction, int start_row, int start_col, int current_row, int current_column, int steps)
+pthread_t solve_with_threads(char direction, int start_row, int start_col, int current_row, int current_column, int steps, int waiting_flag)
 {    
     pthread_t child_thread;
 
@@ -226,27 +235,13 @@ void solve_with_threads(char direction, int start_row, int start_col, int curren
     int thread_id = pthread_create( &child_thread, NULL, walk_with_threads, (void*) current_walker);
 
     // wait until his child thread end
-    pthread_join(child_thread, NULL);
-}
+    if (waiting_flag == WAIT) 
+        pthread_join(child_thread, NULL);
 
-pthread_t solve_with_threads_aux(char direction, int start_row, int start_col, int current_row, int current_column, int steps)
-{    
-    pthread_t child_thread;
-
-    // create the parent walker
-    Walker current_walker = build_walker(direction, start_row, start_col, current_row, current_column, steps);
-
-    // create the parent thread, invoking walk function
-    int thread_id = pthread_create( &child_thread, NULL, walk_with_threads, (void*) current_walker);
-    
     return child_thread;
 }
 
-void hello() {
-    printf("HELLO");
-}
-
-void solve_with_forks(char direction, int start_row, int start_col, int current_row, int current_column, int steps)
+pid_t solve_with_forks(char direction, int start_row, int start_col, int current_row, int current_column, int steps, int waiting_flag)
 {
     // create the parent walker
     Walker current_walker = 
@@ -256,25 +251,26 @@ void solve_with_forks(char direction, int start_row, int start_col, int current_
     if (pid == 0) // child
     {   
         walk_with_forks(current_walker);
-    }else if (pid > 0) // parent
+    }
+    else if (pid > 0 && waiting_flag == WAIT) // parent
     {   
         while (wait(NULL) > 0);
     }
 }
 
-pid_t solve_with_forks_aux(char direction, int start_row, int start_col, int current_row, int current_column, int steps)
-{
-    // create the parent walker
-    Walker current_walker = 
-        build_walker(direction, start_row, start_col, current_row, current_column, steps);
+// pid_t solve_with_forks_aux(char direction, int start_row, int start_col, int current_row, int current_column, int steps)
+// {
+//     // create the parent walker
+//     Walker current_walker = 
+//         build_walker(direction, start_row, start_col, current_row, current_column, steps);
 
-    pid_t pid = fork();
+//     pid_t pid = fork();
 
-    if (pid == 0) // child
-    {   
-        walk_with_forks(current_walker);
-    }
-}
+//     if (pid == 0) // child
+//     {   
+//         walk_with_forks(current_walker);
+//     }
+// }
 
 void handle_winner(Walker walker, Maze maze) 
 {    

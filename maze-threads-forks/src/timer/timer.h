@@ -4,9 +4,11 @@
 
 #define DEFAULT_START_DIRECTION 's' // DOWN
 
+#define THREADS_STRATEGY 0
+#define FORKS_STRATEGY   1
+
 void eval_solver(
-    void (*solve)(char,int,int,int,int,int), 
-    char *strategy_name, 
-    char *filename, 
-    int strategy_mode);
+    char *filename,
+    int strategy_mode
+);
 
