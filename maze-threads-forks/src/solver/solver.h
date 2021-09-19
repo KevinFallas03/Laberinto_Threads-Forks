@@ -107,6 +107,7 @@ pthread_t solve_with_threads_aux(char direction, int start_row, int start_col, i
 void solve_with_forks(char direction, int start_row, int start_col, int current_row, int current_column, int steps);
 pid_t solve_with_forks_aux(char direction, int start_row, int start_col, int current_row, int current_column, int steps);
 
+
 void print_maze();
 void show_stats();
 
