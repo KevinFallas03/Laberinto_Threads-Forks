@@ -28,9 +28,9 @@ void run_threads_and_fork_solvers(char *filename) {
     srand(time(NULL));
 
     eval_solver(solve_with_threads, "THREADS", filename);
-    eval_solver(solve_with_forks, "FORKS", filename);
+    // eval_solver(solve_with_forks, "FORKS", filename);
 
-    show_results();
+    // show_results();
 }
 
 void manual_test() 

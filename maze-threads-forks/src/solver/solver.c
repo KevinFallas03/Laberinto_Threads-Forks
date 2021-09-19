@@ -90,9 +90,12 @@ void *walk_with_threads(void *_walker)
     int is_death = 0;
 
     while(!is_death) {
-        
+
         paint_path(current_walker->color, row, column);
-        
+
+        pthread_t pid_list[] = {NULL,NULL};
+        int pid_counter = 0;
+
         if(is_at_finish(row, column))
         {
             handle_winner(current_walker, original_maze);
@@ -120,7 +123,8 @@ void *walk_with_threads(void *_walker)
                 current_walker->direction != walker_map[i][PROPOSED_DIRECTION]
             )
             {
-                solve_with_threads(walker_map[i][PROPOSED_DIRECTION], row, column, row_shifted, col_shifted, current_walker->steps);
+                pthread_t tid = solve_with_threads_aux(walker_map[i][PROPOSED_DIRECTION], row, column, row_shifted, col_shifted, current_walker->steps);
+                pid_list[pid_counter++] = tid;
             }
         }
         
@@ -134,6 +138,12 @@ void *walk_with_threads(void *_walker)
 
             row = current_walker->current_row;
             column = current_walker->current_col;
+        }else
+        {
+            for(int tid = 0 ; tid < pid_counter ; tid++)
+            {
+                pthread_join(pid_list[tid], NULL);
+            }
         }
     }
 }
@@ -213,9 +223,22 @@ void solve_with_threads(char direction, int start_row, int start_col, int curren
 
     // create the parent thread, invoking walk function
     int thread_id = pthread_create( &child_thread, NULL, walk_with_threads, (void*) current_walker);
-    
+
     // wait until his child thread end
     pthread_join(child_thread, NULL);
+}
+
+pthread_t solve_with_threads_aux(char direction, int start_row, int start_col, int current_row, int current_column, int steps)
+{    
+    pthread_t child_thread;
+
+    // create the parent walker
+    Walker current_walker = build_walker(direction, start_row, start_col, current_row, current_column, steps);
+
+    // create the parent thread, invoking walk function
+    int thread_id = pthread_create( &child_thread, NULL, walk_with_threads, (void*) current_walker);
+    
+    return child_thread;
 }
 
 void solve_with_forks(char direction, int start_row, int start_col, int current_row, int current_column, int steps)
