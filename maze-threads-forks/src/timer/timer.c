@@ -44,7 +44,6 @@ void eval_solver
         default:
             printf("Unknown strategy mode");
     }
-
     // finish taking the time
     clock_t end = clock();
 
