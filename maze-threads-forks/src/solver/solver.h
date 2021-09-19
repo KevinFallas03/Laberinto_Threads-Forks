@@ -18,16 +18,40 @@ typedef struct walker_unit {
 
 typedef struct walker_unit* Walker;
 
-#define COLORS_AMOUNT 6
-#define RESET "\x1B[0m"
+#define COLORS_AMOUNT 14
 
-char* colores[COLORS_AMOUNT]={
-    "\x1B[36m", 
-    "\x1B[31m", 
-    "\x1B[32m", 
-    "\x1B[33m", 
-    "\x1B[34m", 
-    "\x1B[35m"
+#define RED             "\x1b[31m"
+#define LIGHT_RED       "\x1b[91m"
+#define GREEN           "\x1b[32m"
+#define LIGHT_GREEN     "\x1b[92m"
+#define YELLOW          "\x1b[33m"
+#define LIGHT_YELLOW    "\x1b[93m"
+#define BLUE            "\x1b[34m"
+#define LIGHT_BLUE      "\x1b[94m"
+#define MAGENTA         "\x1b[35m"
+#define LIGHT_MAGENTA   "\x1b[95m"
+#define CYAN            "\x1b[36m"
+#define LIGHT_CYAN      "\x1b[96m"
+#define WHITE           "\x1b[37m"
+#define LIGHT_WHITE     "\x1b[97m"
+
+#define RESET           "\x1B[0m"
+
+char* colores[COLORS_AMOUNT]={ 
+    RED,
+    LIGHT_RED,
+    GREEN,
+    LIGHT_GREEN,
+    YELLOW,
+    LIGHT_YELLOW,
+    BLUE,
+    LIGHT_BLUE,
+    MAGENTA,
+    LIGHT_MAGENTA,
+    CYAN,
+    LIGHT_CYAN,
+    WHITE,
+    LIGHT_WHITE
 };
 
 /* MAZE LOGIC DEFINITIONS */
@@ -45,7 +69,7 @@ char* colores[COLORS_AMOUNT]={
 // display
 #define clear_console() printf("\e[1;1H\e[2J");
 #define show_wall() printf("\u2592");
-#define UPDATE_RATE_IN_SECONDS 1
+#define UPDATE_RATE_IN_SECONDS 0
 
 #define show_trace_with_color(index) printf("%s\u2588%s", colores[index], RESET)
 #define show_available_space(value) printf("%c", value)
