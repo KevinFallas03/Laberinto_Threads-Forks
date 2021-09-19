@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-
+#include <dirent.h> 
 
 typedef struct walker_unit {
    char  direction;

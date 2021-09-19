@@ -1,8 +1,3 @@
-#include <stdio.h>
-#include <dirent.h> 
-#include <stdlib.h>
-#include <pthread.h>
-
 #include "memo/memo.c"
 #include "loader/loader.c"
 
