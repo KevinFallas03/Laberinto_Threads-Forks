@@ -261,13 +261,13 @@ void solve_with_forks(char direction, int start_row, int start_col, int current_
 void handle_winner(Walker walker, Maze maze) 
 {    
     save_info(walker, maze); 
-    printf(
-        "Winner walker: steps->%d, last_direction:%c, x:%d, y:%d\n", 
-        walker->steps, 
-        walker->direction, 
-        walker->current_row, 
-        walker->current_col
-    );
+    // printf(
+    //     "Winner walker: steps->%d, last_direction:%c, x:%d, y:%d\n", 
+    //     walker->steps, 
+    //     walker->direction, 
+    //     walker->current_row, 
+    //     walker->current_col
+    // );
 }
 
 void save_info(Walker walker, Maze maze){
@@ -326,8 +326,6 @@ void get_stats(Walker walker, char* result){
 
     sprintf(buffer, "%d", walker->current_col);
     strcat(result, buffer);
-
-    return &result;
 }
 
 Walker build_walker(char direction, int start_row, int start_col, int current_row, int current_column, int steps)
