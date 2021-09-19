@@ -41,7 +41,8 @@ void clean_directory(){
         while ((dir = readdir(d)) != NULL ){
         if(strcasecmp(dir->d_name, ".") != 0 &
 			strcasecmp(dir->d_name, "..") != 0 &
-			strcasecmp(dir->d_name, "count.txt") != 0){
+			strcasecmp(dir->d_name, "count.txt") != 0 & 
+            strcasecmp(dir->d_name, ".gitignore") != 0){
             strcpy(path_tmp, path);
             strcat(path_tmp, dir->d_name);
 

@@ -57,23 +57,11 @@ void take_a_step(Walker current_walker)
 
 int is_at_finish(int row, int column)
 {
-    // const int finish_constraint_map[] = {
-    //     in_range(row, 1, original_maze->height   - 1),
-    //     column > 0 && row < original_maze->width - 1 ,
-    //     in_range(row, 1, original_maze->height   - 1),
-    //     in_range(column, 1, original_maze->width - 1)
-    // };
-    const int finish_constraint_map[] = {
-        row == 1 && in_range(column, 1, original_maze->width - 1),
-        row == original_maze->height - 1 && in_range(column, 1, original_maze->width - 1),
-        column == 1 && in_range(row, 1, original_maze->height - 1),
-        column == original_maze->width - 1 && in_range(row, 1, original_maze->height - 1)
-    };
-
     // check if the walker finally reach the goal
     for (int i = 0; i < MOVEMENT_AMOUNT; i++)
     {
-        if (finish_constraint_map[i] &&
+        if (in_range(row, 1, original_maze->height-1) &&
+            in_range(column, 1, original_maze->width-1) &&
             original_maze->map[row + ROW_MOVEMENT[i]][column + COL_MOVEMENT[i]] == GOAL
         )
             return FINISHED;
@@ -102,10 +90,10 @@ void *walk_with_threads(void *_walker)
 
         paint_path(current_walker->color, row, column);
 
-        // if(is_at_finish(row, column))
-        // {
-        //     handle_winner(current_walker, original_maze);
-        // } 
+        if(is_at_finish(row, column))
+        {
+            handle_winner(current_walker, original_maze);
+        } 
 
         int walker_map[][2] = // {<dimension constraint>, <propossed direction>}
         {

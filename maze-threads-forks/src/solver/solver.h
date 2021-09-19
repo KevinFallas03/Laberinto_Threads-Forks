@@ -69,7 +69,7 @@ char* colores[COLORS_AMOUNT]={
 // display
 #define clear_console() printf("\e[1;1H\e[2J");
 #define show_wall() printf("\u2592");
-#define UPDATE_RATE_IN_SECONDS 0
+#define UPDATE_RATE_IN_SECONDS 1
 
 #define show_trace_with_color(index) printf("%s\u2588%s", colores[index], RESET)
 #define show_available_space(value) printf("%c", value)
