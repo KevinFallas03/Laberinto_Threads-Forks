@@ -8,7 +8,7 @@ void maze_to_str(Maze maze, char* str)
     {
       for (int y = 0; y < maze->width; y++) {
         str[x * maze->width + y + offset] = 
-          maze->map[ x ][ y ] < 10 
+          maze->map[ x ][ y ] < COLORS_AMOUNT 
             ? maze->map[ x ][ y ] + '0' 
             : maze->map[ x ][ y ] ; 
       }
