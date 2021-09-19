@@ -24,7 +24,15 @@ Maze create_shared_maze(Dimension dim)
         );
 
     for (int i=0; i< dim->height; i++)
-        maze->map[i] = (char*) malloc(sizeof(char) * dim->width);
+        maze->map[i] = 
+            (char*) mmap( 
+                NULL,
+                sizeof(char) * dim->width,
+                PROT_READ  | PROT_WRITE,
+                MAP_SHARED | MAP_ANONYMOUS,
+                0, 
+                0
+            );
 
     return maze;
 }

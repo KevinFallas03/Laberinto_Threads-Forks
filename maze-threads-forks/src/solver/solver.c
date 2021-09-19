@@ -132,7 +132,8 @@ void *walk_with_threads(void *_walker)
 
             row = current_walker->current_row;
             column = current_walker->current_col;
-        }else
+        }
+        else
         {
             for(int tid = 0 ; tid < pid_counter ; tid++)
             {
@@ -153,6 +154,9 @@ void *walk_with_forks(void *_walker)
     int row = current_walker->current_row;
     int column = current_walker->current_col;
     
+    pid_t pid_register[original_maze->height*original_maze->width*2];
+    int pid_counter = 0;
+
     int is_death = 0;
 
     while(!is_death) {
@@ -187,7 +191,11 @@ void *walk_with_forks(void *_walker)
             )
             {
                 // TODO: fork..............
-                solve_with_forks(walker_map[i][PROPOSED_DIRECTION], row, column, row_shifted, col_shifted, current_walker->steps);
+                 solve_with_forks_aux(walker_map[i][PROPOSED_DIRECTION], row, column, row_shifted, col_shifted, current_walker->steps);
+
+                // pthread_t tid = solve_with_threads_aux(walker_map[i][PROPOSED_DIRECTION], row, column, row_shifted, col_shifted, current_walker->steps);
+                // pid_register[pid_counter++] = tid;
+           
             }
         }
         
@@ -203,6 +211,14 @@ void *walk_with_forks(void *_walker)
             column = current_walker->current_col;   
         }
         else {  
+
+            for(int tid = 0 ; tid < pid_counter ; tid++)
+            {
+                // pthread_join(pid_register[pid_counter++], NULL);
+               
+                
+            }
+
             exit(0); // notify to the parent process
         }
     }
@@ -245,6 +261,7 @@ void solve_with_forks(char direction, int start_row, int start_col, int current_
     Walker current_walker = 
         build_walker(direction, start_row, start_col, current_row, current_column, steps);
 
+    pid_t main_pid = getpid();
     pid_t pid = fork();
 
     if (pid == 0) // child
@@ -255,6 +272,30 @@ void solve_with_forks(char direction, int start_row, int start_col, int current_
     {   
         printf("WAITING\n");
         wait(NULL); // wait for child process completion
+    }
+    else if (pid == -1) {
+        // can't fork
+        printf("An error ocurred trying to create the fork.");
+        exit(-1);
+    }
+}
+
+pid_t solve_with_forks_aux(char direction, int start_row, int start_col, int current_row, int current_column, int steps)
+{
+    // create the parent walker
+    Walker current_walker = 
+        build_walker(direction, start_row, start_col, current_row, current_column, steps);
+
+    pid_t pid = fork();
+
+    if (pid == 0) // child
+    {   
+        walk_with_forks(current_walker);
+    }
+    else if (pid > 0) // parent
+    {   
+        // printf("WAITING\n");
+        // wait(NULL); // wait for child process completion
     }
     else if (pid == -1) {
         // can't fork

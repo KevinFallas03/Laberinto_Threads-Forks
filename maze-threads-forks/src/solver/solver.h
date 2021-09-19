@@ -99,12 +99,13 @@ const int COL_MOVEMENT[] = {0, -1, 0,  1};
 
 /* FUNCTION HEADERS */
 void *walk_with_threads( void *walker );
-void *walk_with_forks( void *walker );
+void *walk_with_forks( void *walker);
 
 void solve_with_threads(char direction, int start_row, int start_col, int current_row, int current_column, int steps);
 pthread_t solve_with_threads_aux(char direction, int start_row, int start_col, int current_row, int current_column, int steps);
 
 void solve_with_forks(char direction, int start_row, int start_col, int current_row, int current_column, int steps);
+pid_t solve_with_forks_aux(char direction, int start_row, int start_col, int current_row, int current_column, int steps);
 
 void print_maze();
 void show_stats();

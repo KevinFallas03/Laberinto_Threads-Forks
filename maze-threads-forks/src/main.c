@@ -30,8 +30,8 @@ void run_threads_and_fork_solvers(char *filename) {
     clean_directory();
     srand(time(NULL));
 
-    eval_solver(solve_with_threads, "THREADS", filename, THREADS_MODE);
-    //eval_solver(solve_with_forks, "FORKS", filename, FORKS_MODE);
+    //eval_solver(solve_with_threads, "THREADS", filename, THREADS_MODE);
+    eval_solver(solve_with_forks, "FORKS", filename, FORKS_MODE);
 
     //show_results();
 }
