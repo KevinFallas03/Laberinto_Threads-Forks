@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "memo/memo.c"
 #include "loader/loader.c"
 
@@ -13,8 +15,7 @@ void assemble()
 }
 
 void disassemble() 
-{
-    
+{   
     exit(0);
 }
 
@@ -36,10 +37,16 @@ void run_threads_and_fork_solvers(char *filename) {
 
 int main(int argc, char const *argv[])
 {
-    char *filename =    
-        "../files/lab2.txt";
-    
-    run_threads_and_fork_solvers( filename );
+    char file_path[60] = "../files/maps/";
+    char filename[25];
+
+    printf("%s","Ingrese el nombre del archivo: ");
+
+    scanf("%s", filename);
+
+    strcat(file_path, filename);
+
+    run_threads_and_fork_solvers( file_path );
 
     return EXIT_SUCCESS;
 }
