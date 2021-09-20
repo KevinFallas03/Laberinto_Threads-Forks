@@ -6,6 +6,9 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <dirent.h> 
+#include <sys/time.h>
+#include <sys/resource.h>
+#include <sys/times.h>
 
 typedef struct walker_unit {
    char  direction;
@@ -70,7 +73,7 @@ char* colores[COLORS_AMOUNT]={
 // display
 #define clear_console() printf("\e[1;1H\e[2J");
 #define show_wall() printf("\u2592");
-#define UPDATE_RATE_IN_SECONDS 1
+#define UPDATE_RATE_IN_SECONDS 0
 
 #define show_trace_with_color(index) printf("%s\u2588%s", colores[index], RESET)
 #define show_available_space(value) printf("%c", value)
@@ -106,18 +109,13 @@ void *walk_with_threads( void *walker );
 void *walk_with_forks( void *walker);
 
 pthread_t solve_with_threads(char direction, int start_row, int start_col, int current_row, int current_column, int steps, int waiting_flag);
-
-//pthread_t solve_with_threads_aux(char direction, int start_row, int start_col, int current_row, int current_column, int steps);
-
 pid_t solve_with_forks(char direction, int start_row, int start_col, int current_row, int current_column, int steps,int waiting_flag);
-// pid_t solve_with_forks_aux(char direction, int start_row, int start_col, int current_row, int current_column, int steps);
-
 
 void print_maze();
 void show_stats();
 
 int  is_at_finish(int row, int column);
-void handle_winner(Walker walker, Maze maze);
+void handle_winner(Walker walker, Maze maze, int mode);
 Walker build_walker(char direction, int start_row, int start_col, int current_row, int current_column, int steps);
 
 

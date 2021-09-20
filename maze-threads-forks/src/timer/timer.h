@@ -4,11 +4,8 @@
 
 #define DEFAULT_START_DIRECTION 's' // DOWN
 
-#define THREADS_STRATEGY 0
-#define FORKS_STRATEGY   1
-
-void eval_solver(
-    char *filename,
-    int strategy_mode
-);
+TimeRecord create_time_recorder();
+void eval_solver(char *filename,int strategy_mode);
+void show_solution_times();
+void record_solution_time(int strategy_mode);
 

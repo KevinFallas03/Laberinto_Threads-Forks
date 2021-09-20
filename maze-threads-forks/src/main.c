@@ -3,10 +3,12 @@
 #include "memo/memo.c"
 #include "loader/loader.c"
 
+TimeRecord time_recorder = NULL;
 Maze original_maze = NULL;
 
 #include "solver/solver.c"
 #include "timer/timer.c"
+
 
 // command line interface utils
 void read_file_path(char file_path[]);
@@ -14,9 +16,15 @@ void read_file_path(char file_path[]);
 #define INPUT_BUFFER_SIZE 60
 
 void assemble() 
-{        
+{   
+    // clean old solutions files     
     clean_directory();
+
+    // set random seed using clock time
     srand(time(NULL));
+
+    // initialize the time recorder with shared memory
+    time_recorder = create_time_recorder();
 }
 
 void disassemble() 
@@ -41,6 +49,9 @@ void run_threads_and_fork_solvers() {
 
     // solve with threads strategy
     eval_solver(file_path, THREADS_MODE);
+    
+    // show times for solutions with both strategies
+    show_solution_times();
 
     // save solutions files
     show_results();
@@ -61,4 +72,5 @@ void read_file_path(char file_path[])
     printf("%s","Ingrese el nombre del archivo: ");
     scanf("%s", filename);
     strcat(file_path, filename);
+    while(getchar() != '\n');
 }

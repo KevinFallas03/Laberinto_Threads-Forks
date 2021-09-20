@@ -91,7 +91,7 @@ void *walk_with_threads(void *_walker)
 
         if(is_at_finish(row, column))
         {
-            handle_winner(current_walker, original_maze);
+            handle_winner(current_walker, original_maze, THREADS_STRATEGY);
         } 
 
         int walker_map[][2] = // {<dimension constraint>, <propossed direction>}
@@ -169,7 +169,7 @@ void *walk_with_forks(void *_walker)
         
         if(is_at_finish(row, column))
         {
-            handle_winner(current_walker, original_maze);  
+            handle_winner(current_walker, original_maze, FORKS_STRATEGY);  
         } 
 
         int walker_map[][2] = // {<dimension constraint>, <propossed direction>}
@@ -233,8 +233,9 @@ pthread_t solve_with_threads(char direction, int start_row, int start_col, int c
     int thread_id = pthread_create( &child_thread, NULL, walk_with_threads, (void*) current_walker);
 
     // wait until his child thread end
-    if (waiting_flag == WAIT) 
+    if (waiting_flag == WAIT) {
         pthread_join(child_thread, NULL);
+    }
 
     return child_thread;
 }
@@ -246,6 +247,7 @@ pid_t solve_with_forks(char direction, int start_row, int start_col, int current
         build_walker(direction, start_row, start_col, current_row, current_column, steps);
     
     pid_t pid = fork();
+
     if (pid == 0) // child
     {   
         walk_with_forks(current_walker);
@@ -256,25 +258,11 @@ pid_t solve_with_forks(char direction, int start_row, int start_col, int current
     }
 }
 
-// pid_t solve_with_forks_aux(char direction, int start_row, int start_col, int current_row, int current_column, int steps)
-// {
-//     // create the parent walker
-//     Walker current_walker = 
-//         build_walker(direction, start_row, start_col, current_row, current_column, steps);
-
-//     pid_t pid = fork();
-
-//     if (pid == 0) // child
-//     {   
-//         walk_with_forks(current_walker);
-//     }
-// }
-
-void handle_winner(Walker walker, Maze maze) 
+void handle_winner(Walker walker, Maze maze, int mode) 
 {    
     save_info(walker, maze); 
+    record_solution_time(mode);
 }
-
 
 Walker build_walker(char direction, int start_row, int start_col, int current_row, int current_column, int steps)
 {
