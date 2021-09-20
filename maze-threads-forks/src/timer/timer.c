@@ -13,25 +13,52 @@ TimeRecord create_time_recorder()
                 0
             );
 
+    // allocate memory for timeval pointer
+    time_recorder->start_time =
+        (struct timeval *) mmap( 
+                NULL,
+                sizeof(struct timeval),
+                PROT_READ  | PROT_WRITE,
+                MAP_SHARED | MAP_ANONYMOUS,
+                0, 
+                0
+            ); 
+
+    time_recorder->end_time =
+        (struct timeval *) mmap( 
+                NULL,
+                sizeof(struct timeval),
+                PROT_READ  | PROT_WRITE,
+                MAP_SHARED | MAP_ANONYMOUS,
+                0, 
+                0
+            ); 
+
     return time_recorder;
 }
 
 void record_solution_time(int strategy_mode) 
 {
     // stop solution time for the solution
-    clock_t end_solution_time = clock();
+    struct timeval t_end, t_res;
+    
+    gettimeofday(&t_end, NULL);
 
-    double time_spent = 
-        (double) (end_solution_time - time_recorder->start_time) / (double) (CLOCKS_PER_SEC);
+    // substract end time with start time using timeval
+    timersub(&t_end, time_recorder->start_time, &t_res);
 
     if (strategy_mode == THREADS_STRATEGY)
     {
-        time_recorder->thread_times[time_recorder->time_counter++] = time_spent;
+        time_recorder->thread_times[time_recorder->time_counter] = t_res.tv_sec;
+        time_recorder->thread_times_u[time_recorder->time_counter] = t_res.tv_usec;
     }
     else
     {
-        time_recorder->fork_times[time_recorder->time_counter++] = time_spent;
+        time_recorder->fork_times[time_recorder->time_counter] = t_res.tv_sec;
+        time_recorder->fork_times_u[time_recorder->time_counter] = t_res.tv_usec;
     }
+    
+    time_recorder->time_counter++;
 }
 
 void eval_solver
@@ -46,7 +73,7 @@ void eval_solver
     original_maze = load_maze(filename, strategy_mode);
 
     // set start time
-    time_recorder->start_time = clock();
+    gettimeofday(time_recorder->start_time, NULL);
 
     // call the maze solve function
     switch(strategy_mode)
@@ -64,11 +91,6 @@ void eval_solver
         break;
 
         case FORKS_STRATEGY:
-
-            // int pid = fork();
-
-            // if (pid == 0) // children
-            // {
                 solve_with_forks(
                     DEFAULT_START_DIRECTION, 
                     0, 
@@ -78,12 +100,6 @@ void eval_solver
                     0,
                     WAIT
                 );
-            // }
-            // else if (pid > 0) // parent
-            // {
-            //     wait(NULL);
-            // }
-    
         break;
 
         default:
@@ -93,9 +109,6 @@ void eval_solver
     // reset for solution indexing
     time_recorder->solutions_amount = time_recorder->time_counter;
     time_recorder->time_counter = 0;
-
-    // finish taking the time
-    clock_t end = clock();
 }
 
 void show_solution_times() 
@@ -103,10 +116,13 @@ void show_solution_times()
     for (int i = 0; i < time_recorder->solutions_amount; i++)
     {
         printf(
-            "\nSolution %d\nTHREADS: %lf secs\nFORKS: %lf secs\n\n", 
+            "\nSolution %d\nTHREADS: %ld.%06ld secs\nFORKS: %ld.%06ld secs\n\n", 
             i+1,
-            time_recorder->thread_times[i],
-            time_recorder->fork_times[i]
+            (long int) time_recorder->thread_times[i],
+            (long int) time_recorder->thread_times_u[i],
+
+            (long int) time_recorder->fork_times[i],
+            (long int) time_recorder->fork_times_u[i]
         );
     }
 }

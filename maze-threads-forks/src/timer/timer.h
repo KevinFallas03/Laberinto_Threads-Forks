@@ -7,5 +7,5 @@
 TimeRecord create_time_recorder();
 void eval_solver(char *filename,int strategy_mode);
 void show_solution_times();
-void record_solution_time(int strategy_mode);
+
 

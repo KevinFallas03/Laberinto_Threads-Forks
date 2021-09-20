@@ -19,10 +19,14 @@ typedef struct dimension {
 }* Dimension;
 
 typedef struct timer_record {
-    clock_t start_time;
-    clock_t end_time;
-    double fork_times[TIME_BUFFER_SIZE];
-    double thread_times[TIME_BUFFER_SIZE];
+    struct timeval *start_time;
+    struct timeval *end_time;
+
+    time_t fork_times[TIME_BUFFER_SIZE];
+    time_t thread_times[TIME_BUFFER_SIZE];
+    time_t fork_times_u[TIME_BUFFER_SIZE];
+    time_t thread_times_u[TIME_BUFFER_SIZE];
+
     int time_counter;
     int solutions_amount;
 }* TimeRecord;

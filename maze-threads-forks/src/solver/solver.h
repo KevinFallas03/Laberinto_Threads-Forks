@@ -118,4 +118,4 @@ int  is_at_finish(int row, int column);
 void handle_winner(Walker walker, Maze maze, int mode);
 Walker build_walker(char direction, int start_row, int start_col, int current_row, int current_column, int steps);
 
-
+void record_solution_time(int strategy_mode);
