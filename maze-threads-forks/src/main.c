@@ -9,7 +9,6 @@ Maze original_maze = NULL;
 #include "solver/solver.c"
 #include "timer/timer.c"
 
-
 // command line interface utils
 void read_file_path(char file_path[]);
 
@@ -54,7 +53,7 @@ void run_threads_and_fork_solvers() {
     show_solution_times();
 
     // save solutions files
-    show_results();
+    // show_results();
 
     disassemble();
 }
