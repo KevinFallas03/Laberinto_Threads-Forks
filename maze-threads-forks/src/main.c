@@ -8,6 +8,11 @@ Maze original_maze = NULL;
 #include "solver/solver.c"
 #include "timer/timer.c"
 
+// command line interface utils
+void read_file_path(char file_path[]);
+
+#define INPUT_BUFFER_SIZE 60
+
 void assemble() 
 {        
     clean_directory();
@@ -19,34 +24,41 @@ void disassemble()
     exit(0);
 }
 
-void run_threads_and_fork_solvers(char *filename) {
+void run_threads_and_fork_solvers() {
 
     assemble();
 
-    eval_solver(filename, FORKS_MODE);
+    // request file name of the maze
+    char file_path[INPUT_BUFFER_SIZE] = "../files/maps/";
+    read_file_path(file_path);
 
+    // solve with forks strategy
+    eval_solver(file_path, FORKS_MODE);
+
+    // wait until user wants to continue solving with threads strategy
     printf("\n\nRun threads mode ...PRESS ENTER...\n\n");
     while ( getchar() != '\n' );
 
-    eval_solver(filename, THREADS_MODE);
+    // solve with threads strategy
+    eval_solver(file_path, THREADS_MODE);
 
-    // show_results();
+    // save solutions files
+    show_results();
 
     disassemble();
 }
 
 int main(int argc, char const *argv[])
 {
-    char file_path[60] = "../files/maps/";
-    char filename[25];
-
-    printf("%s","Ingrese el nombre del archivo: ");
-
-    scanf("%s", filename);
-
-    strcat(file_path, filename);
-
-    run_threads_and_fork_solvers( file_path );
+    run_threads_and_fork_solvers();
 
     return EXIT_SUCCESS;
+}
+
+void read_file_path(char file_path[]) 
+{
+    char filename[INPUT_BUFFER_SIZE / 2];
+    printf("%s","Ingrese el nombre del archivo: ");
+    scanf("%s", filename);
+    strcat(file_path, filename);
 }
