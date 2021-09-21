@@ -54,7 +54,7 @@ En la carpeta maze-threads-forks se encuentra el código con la solución del pr
 ```
 
 ## Ejecución 
-Para ejecutar es necesario estar bajo el ambiente de linux.
+Para ejecutar y compilar el programa es necesario estar bajo el ambiente de linux.
 También para mayor facilidad a la hora de compilar y ejecutar es necesario tener instalado make.
 
 Al tener make instalado, es necesario dirigirse la la carpeta src e ingresar el comando make.
